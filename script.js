@@ -63,7 +63,7 @@ function setHistory(newHistory = { id: '', name: '', nextDataSet: {} }) {
   }
 }
 setHistory();
-const API_KEY = '7674c75fd50360698efc068b5f2eefa2';
+const API_KEY = '';
 var DateTime = luxon.DateTime;
 
 /// search button triggers fetch request
