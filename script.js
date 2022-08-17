@@ -79,7 +79,7 @@ async function fetchCoordinates() {
     city = 'atlanta';
   }
 
-  const url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`;
+  const url = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`;
   const response = await fetch(url)
     .then((res) => res.json())
     .then((json) => json)
@@ -173,7 +173,7 @@ function setForecastDisplay(obj) {
   // current day forecast
   currentIcon.setAttribute(
     'src',
-    `http://openweathermap.org/img/wn/${history[0]?.nextDataSet.day0.weather[0].icon}@2x.png`
+    `https://openweathermap.org/img/wn/${history[0]?.nextDataSet.day0.weather[0].icon}@2x.png`
   );
   currentIcon.setAttribute(
     'alt',
@@ -189,7 +189,7 @@ function setForecastDisplay(obj) {
       if (Number(key.replace('day', '')) === idx + 1) {
         each.setAttribute(
           'src',
-          `http://openweathermap.org/img/wn/${obj[key].weather[0].icon}@2x.png`
+          `https://openweathermap.org/img/wn/${obj[key].weather[0].icon}@2x.png`
         );
         each.setAttribute('alt', obj[key].weather[0].description);
       }
