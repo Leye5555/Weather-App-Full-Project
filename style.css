@@ -40,12 +40,12 @@ li[class*='list-group-item'] {
 [class*='card-wrap'] {
   /* scroll-snap-align: start; */
   width: 20.6667%;
-  max-width: 190px;
+  max-width: 200px;
   min-width: 170px;
 }
 [class~='card'] {
   padding-top: 1em;
-  background-color: rgb(11, 52, 85);
+  background-color: rgb(21, 80, 128);
   height: 17rem;
 }
 [class~='card-title'] {
@@ -65,4 +65,12 @@ li[class*='list-group-item'] {
     width: calc(1em * 18);
     max-width: unset;
   }
+}
+
+#main-icon {
+  width: 100px;
+  height: 40px;
+}
+#main-icon > img {
+  max-width: 100%;
 }

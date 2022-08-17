@@ -120,16 +120,18 @@ async function fetchWeatherData() {
 
     let { days } = end.diff(start, 'days').toObject();
     if (Number(days) === 1 && !nextDataSet.day2) {
-      nextDataSet.day2 = each;
+      nextDataSet.day1 = each;
     } else if (Number(days) === 2 && !nextDataSet.day3) {
-      nextDataSet.day3 = each;
+      nextDataSet.day2 = each;
     } else if (Number(days) === 3 && !nextDataSet.day4) {
-      nextDataSet.day4 = each;
+      nextDataSet.day3 = each;
     } else if (Number(days) === 4 && !nextDataSet.day5) {
+      nextDataSet.day4 = each;
+    } else if (Number(days) === 5 && !nextDataSet.day5) {
       nextDataSet.day5 = each;
-    } else return;
+    }
   });
-  nextDataSet = { ...nextDataSet, day1: currentWeather };
+  nextDataSet = { ...nextDataSet, day0: currentWeather };
   setHistory({ id, name, nextDataSet });
 }
 
@@ -145,12 +147,16 @@ function setForecastDisplay(obj) {
     history = history.filter((item) => Number(item.id) === activeId);
     obj = history[0].nextDataSet;
   }
-
+  const allIcons = document.querySelectorAll('.icons');
+  const currentIcon = document.getElementById('current-icon');
   const allCardTitles = document.querySelectorAll('.card-title');
   const currentDate = document.querySelector('.currentDate');
   const currentTemp = document.querySelector('.currentTemp');
   const currentWind = document.querySelector('.currentWind');
   const currentHumidity = document.querySelector('.currentHumidity');
+  const allCardTemp = document.querySelectorAll('.temp');
+  const allCardWind = document.querySelectorAll('.wind');
+  const allCardHumid = document.querySelectorAll('.humidity');
 
   let history = window.localStorage.getItem('history');
   history = history !== null ? JSON.parse(history) : [];
@@ -162,11 +168,33 @@ function setForecastDisplay(obj) {
   }
 
   currentDate.textContent = `${history[0]?.name} (${
-    obj.day1.dt_txt.split(' ')[0]
+    obj.day0.dt_txt.split(' ')[0]
   })`;
-  currentTemp.textContent = `${history[0]?.nextDataSet.day1.main.temp}`;
-  currentWind.textContent = `${history[0]?.nextDataSet.day1.wind.speed}`;
-  currentHumidity.textContent = `${history[0]?.nextDataSet.day1.main.humidity}`;
+  // current day forecast
+  currentIcon.setAttribute(
+    'src',
+    `http://openweathermap.org/img/wn/${history[0]?.nextDataSet.day0.weather[0].icon}@2x.png`
+  );
+  currentIcon.setAttribute(
+    'alt',
+    history[0]?.nextDataSet.day0.weather[0].description
+  );
+  currentTemp.textContent = `${history[0]?.nextDataSet.day0.main.temp}`;
+  currentWind.textContent = `${history[0]?.nextDataSet.day0.wind.speed}`;
+  currentHumidity.textContent = `${history[0]?.nextDataSet.day0.main.humidity}`;
+
+  // 5-day forecast
+  allIcons.forEach((each, idx) => {
+    for (let key in obj) {
+      if (Number(key.replace('day', '')) === idx + 1) {
+        each.setAttribute(
+          'src',
+          `http://openweathermap.org/img/wn/${obj[key].weather[0].icon}@2x.png`
+        );
+        each.setAttribute('alt', obj[key].weather[0].description);
+      }
+    }
+  });
 
   allCardTitles.forEach((each, idx) => {
     for (let key in obj) {
@@ -174,7 +202,6 @@ function setForecastDisplay(obj) {
         each.textContent = obj[key].dt_txt.split(' ')[0];
     }
   });
-  const allCardTemp = document.querySelectorAll('.temp');
   allCardTemp.forEach((each, idx) => {
     for (let key in obj) {
       if (Number(key.replace('day', '')) === idx + 1) {
@@ -182,7 +209,13 @@ function setForecastDisplay(obj) {
       }
     }
   });
-  const allCardWind = document.querySelectorAll('.wind');
+  allCardTemp.forEach((each, idx) => {
+    for (let key in obj) {
+      if (Number(key.replace('day', '')) === idx + 1) {
+        each.textContent = obj[key].main.temp;
+      }
+    }
+  });
   allCardWind.forEach((each, idx) => {
     for (let key in obj) {
       if (Number(key.replace('day', '')) === idx + 1) {
@@ -190,7 +223,6 @@ function setForecastDisplay(obj) {
       }
     }
   });
-  const allCardHumid = document.querySelectorAll('.humidity');
   allCardHumid.forEach((each, idx) => {
     for (let key in obj) {
       if (Number(key.replace('day', '')) === idx + 1) {
